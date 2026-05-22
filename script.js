@@ -23,7 +23,18 @@ const CONFIG = {
     // ==============================================
 
     // Texto romântico principal da página
-    textoApaixonante: "Cada momento ao seu lado transforma minha vida em algo completamente mágico. Olhar para trás e ver tudo o que já construímos me dá a certeza de que fomos feitos um para o outro. Obrigado(a) por ser meu porto seguro, meu sorriso diário e minha melhor escolha todos os dias. Que o nosso 'para sempre' continue sendo escrito com todo o carinho e cumplicidade do mundo. Te amo infinitamente!"
+    textoApaixonante: "Meu amor,
+
+Hoje eu quero te fazer uma promessa simples, mas verdadeira.
+Prometo caminhar ao seu lado mesmo nos dias difíceis, quando o mundo parecer pesado e os nossos sonhos parecerem distantes. Prometo celebrar cada conquista sua como se fosse minha, porque a sua felicidade também se tornou parte da minha.
+
+Prometo cuidar do nosso amor com paciência, respeito e carinho. Não quero viver apenas os momentos perfeitos com você, quero também enfrentar as tempestades, aprender com os erros e crescer juntos todos os dias.
+
+Prometo nunca deixar faltar diálogo, abraço apertado e sinceridade entre nós. Quando você sentir medo, quero ser seu abrigo. Quando eu estiver perdido, espero encontrar paz no seu olhar.
+
+Ainda somos jovens, temos muito para descobrir, construir e viver. E talvez seja exatamente isso que torna tudo tão especial: estamos escrevendo nossa história juntos, página por página, sonho por sonho.
+
+Acima de qualquer coisa, prometo escolher você todos os dias — nos dias fáceis e nos difíceis, nas risadas e nas inseguranças, no presente e em todos os planos que ainda vamos realizar... Te amo infinitamente!"
 };
 
 // Frases românticas para o Coração que Estoupa (Sorteio aleatório baseado no milissegundo do clique)
