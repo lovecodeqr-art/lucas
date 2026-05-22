@@ -23,7 +23,7 @@ const CONFIG = {
     // ==============================================
 
     // Texto romântico principal da página
-    textoApaixonante: "Meu amor,
+    textoApaixonante: `Meu amor,
 
 Hoje eu quero te fazer uma promessa simples, mas verdadeira.
 Prometo caminhar ao seu lado mesmo nos dias difíceis, quando o mundo parecer pesado e os nossos sonhos parecerem distantes. Prometo celebrar cada conquista sua como se fosse minha, porque a sua felicidade também se tornou parte da minha.
@@ -34,7 +34,7 @@ Prometo nunca deixar faltar diálogo, abraço apertado e sinceridade entre nós.
 
 Ainda somos jovens, temos muito para descobrir, construir e viver. E talvez seja exatamente isso que torna tudo tão especial: estamos escrevendo nossa história juntos, página por página, sonho por sonho.
 
-Acima de qualquer coisa, prometo escolher você todos os dias — nos dias fáceis e nos difíceis, nas risadas e nas inseguranças, no presente e em todos os planos que ainda vamos realizar... Te amo infinitamente!"
+Acima de qualquer coisa, prometo escolher você todos os dias — nos dias fáceis e nos difíceis, nas risadas e nas inseguranças, no presente e em todos os planos que ainda vamos realizar... Te amo infinitamente!`
 };
 
 // Frases românticas para o Coração que Estoupa (Sorteio aleatório baseado no milissegundo do clique)
@@ -53,9 +53,9 @@ const FRASES_CORACAO = [
     "Você é o meu porto seguro, a minha paz eterna e a minha melhor escolha diária.",
     "Te amo hoje, amanhã, depois e por toda a eternidade que nos espera.",
     "Seu carinho reconstruiu tudo de mais lindo que existe em mim.",
-    "Não importa onde eu esteja, meu coração sempre vai pertencer a você.",
+    "Não importa onde eu esteja, meu coração sempre vai pertencera você.",
     "Estar com você é como ouvir a minha música favorita repetidamente sem nunca enjoar.",
-    "Você é o dream mais lindo que Deus me permitiu realizar acordado.",
+    "Você é o sonho mais lindo que Deus me permitiu realizar acordado.",
     "O seu abraço tem o encaixe perfeito para acalmar todo o meu mundo.",
     "Prometo te amar nos pequenos detalhes e cuidar de você para sempre.",
     "Minha vida ganhou uma trilha sonora muito mais bonita desde que você chegou."
@@ -79,6 +79,8 @@ function montarEstruturasDeFotos() {
     const dotsContainer = document.getElementById("slider-dots");
     const galleryContainer = document.getElementById("horizontal-gallery");
 
+    if (!sliderContainer || !galleryContainer) return;
+
     let isFirst = true;
     let indexDot = 0;
 
@@ -87,22 +89,25 @@ function montarEstruturasDeFotos() {
         const slideDiv = document.createElement("div");
         slideDiv.className = `slide-item ${isFirst ? 'active' : ''}`;
         
-        // Caminho da imagem
         const imgPath = `imag/${CONFIG.prefixoFotos}${i}${CONFIG.extensaoFotos}`;
         
-        // Definimos o background inline para o efeito blur funcionar no CSS
         slideDiv.style.backgroundImage = `url('${imgPath}')`;
         slideDiv.innerHTML = `<img src="${imgPath}" alt="Nosso momento">`;
         
-        // Insere o slide antes dos botões de controle de navegação
-        sliderContainer.insertBefore(slideDiv, sliderContainer.querySelector(".prev-btn"));
+        const prevBtn = sliderContainer.querySelector(".prev-btn");
+        if (prevBtn) {
+            sliderContainer.insertBefore(slideDiv, prevBtn);
+        } else {
+            sliderContainer.appendChild(slideDiv);
+        }
 
-        // Gera as bolinhas indicadoras inferiores do slider
-        const dotSpan = document.createElement("span");
-        dotSpan.className = `dot ${isFirst ? 'active' : ''}`;
-        const currentIdx = indexDot;
-        dotSpan.onclick = () => showSlide(currentIdx);
-        dotsContainer.appendChild(dotSpan);
+        if (dotsContainer) {
+            const dotSpan = document.createElement("span");
+            dotSpan.className = `dot ${isFirst ? 'active' : ''}`;
+            const currentIdx = indexDot;
+            dotSpan.onclick = () => showSlide(currentIdx);
+            dotsContainer.appendChild(dotSpan);
+        }
 
         isFirst = false;
         indexDot++;
@@ -136,8 +141,8 @@ function showSlide(index) {
     slides.forEach(slide => slide.classList.remove('active'));
     dots.forEach(dot => dot.classList.remove('active'));
 
-    slides[currentSlide].classList.add('active');
-    dots[currentSlide].classList.add('active');
+    if (slides[currentSlide]) slides[currentSlide].classList.add('active');
+    if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 
     resetSliderTimer();
 }
@@ -178,12 +183,19 @@ function atualizarContador() {
     const segundos = Math.floor((diferenca % msmMinuto) / 1000);
     const milisegundos = Math.floor(diferenca % 1000);
 
-    document.getElementById("years").innerText = String(anos).padStart(2, '0');
-    document.getElementById("days").innerText = String(dias).padStart(2, '0');
-    document.getElementById("hours").innerText = String(horas).padStart(2, '0');
-    document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
-    document.getElementById("seconds").innerText = String(segundos).padStart(2, '0');
-    document.getElementById("milliseconds").innerText = String(milisegundos).padStart(3, '0');
+    const elYears = document.getElementById("years");
+    const elDays = document.getElementById("days");
+    const elHours = document.getElementById("hours");
+    const elMinutes = document.getElementById("minutes");
+    const elSeconds = document.getElementById("seconds");
+    const elMillis = document.getElementById("milliseconds");
+
+    if(elYears) elYears.innerText = String(anos).padStart(2, '0');
+    if(elDays) elDays.innerText = String(dias).padStart(2, '0');
+    if(elHours) elHours.innerText = String(horas).padStart(2, '0');
+    if(elMinutes) elMinutes.innerText = String(minutes).padStart(2, '0');
+    if(elSeconds) elSeconds.innerText = String(segundos).padStart(2, '0');
+    if(elMillis) elMillis.innerText = String(milisegundos).padStart(3, '0');
 }
 
 /* ==========================================================================\
@@ -197,7 +209,7 @@ function popHeart(event) {
     const currentMs = new Date().getMilliseconds();
     const randomIndex = currentMs % FRASES_CORACAO.length;
     
-    phraseText.innerText = FRASES_CORACAO[randomIndex];
+    if (phraseText) phraseText.innerText = FRASES_CORACAO[randomIndex];
 
     if (typeof Coracao === 'function') {
         for (let i = 0; i < 35; i++) {
@@ -212,10 +224,10 @@ function popHeart(event) {
         }
     }
 
-    heart.style.transform = "scale(0)";
+    if (heart) heart.style.transform = "scale(0)";
     setTimeout(() => {
-        heart.classList.add("hidden");
-        phraseBox.classList.remove("hidden");
+        if (heart) heart.classList.add("hidden");
+        if (phraseBox) phraseBox.classList.remove("hidden");
     }, 200);
 }
 
@@ -223,10 +235,10 @@ function resetHeart() {
     const heart = document.getElementById("clickable-heart");
     const phraseBox = document.getElementById("heart-phrase-box");
 
-    phraseBox.classList.add("hidden");
-    heart.classList.remove("hidden");
+    if (phraseBox) phraseBox.classList.add("hidden");
+    if (heart) heart.classList.remove("hidden");
     setTimeout(() => {
-        heart.style.transform = "scale(1)";
+        if (heart) heart.style.transform = "scale(1)";
     }, 50);
 }
 
@@ -235,31 +247,35 @@ function resetHeart() {
    ========================================================================== */
 function openEnvelope() {
     const wrapper = document.querySelector('.envelope-wrapper');
-    wrapper.classList.add('open');
+    if (wrapper) wrapper.classList.add('open');
 
-    // Quando o usuário abre o envelope, iniciamos a música automaticamente via código se permitido pelo navegador
-    if (playerYT && typeof playerYT.playVideo === 'function') {
-        playerYT.playVideo();
-        musicaTocando = true;
-        
-        // Atualiza elementos visuais do player de som
-        const btn = document.getElementById("play-pause-btn");
-        const icon = document.querySelector(".music-icon");
-        const tip = document.getElementById("music-tip");
-        
-        btn.innerText = "⏸";
-        btn.classList.add("playing");
-        if(icon) icon.classList.add("playing");
-        if(tip) tip.style.display = "none"; // Esconde o aviso caso já esteja tocando
+    // Tenta dar play na música, mas não deixa travar se o navegador bloquear
+    try {
+        if (playerYT && typeof playerYT.playVideo === 'function') {
+            playerYT.playVideo();
+            musicaTocando = true;
+            
+            const btn = document.getElementById("play-pause-btn");
+            const icon = document.querySelector(".music-icon");
+            const tip = document.getElementById("music-tip");
+            
+            if (btn) { btn.innerText = "⏸"; btn.classList.add("playing"); }
+            if (icon) icon.classList.add("playing");
+            if (tip) tip.style.display = "none";
+        }
+    } catch (e) {
+        console.log("Autoplay bloqueado pelo navegador, aguardando clique manual.");
     }
 
     setTimeout(() => {
-        document.getElementById("welcome-screen").classList.add("fade-out");
-        document.getElementById("main-content").classList.remove("hidden");
+        const welcomeScreen = document.getElementById("welcome-screen");
+        const mainContent = document.getElementById("main-content");
+
+        if (welcomeScreen) welcomeScreen.classList.add("fade-out");
+        if (mainContent) mainContent.classList.remove("hidden");
         
         resetSliderTimer();
         setInterval(atualizarContador, 40);
-
         initScrollReveal();
     }, 1200); 
 }
@@ -320,7 +336,7 @@ function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('youtube-audio-player', {
         videoId: CONFIG.youtubeId,
         playerVars: {
-            'autoplay': 0,      // Aguarda estritamente o play/clique do usuário
+            'autoplay': 0,      
             'controls': 0,
             'loop': 1,
             'playlist': CONFIG.youtubeId,
@@ -334,7 +350,8 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-    document.getElementById("music-title").innerText = CONFIG.nomeMusica;
+    const musicTitle = document.getElementById("music-title");
+    if (musicTitle) musicTitle.innerText = CONFIG.nomeMusica;
 }
 
 function toggleMúsica() {
@@ -346,16 +363,14 @@ function toggleMúsica() {
 
     if (!musicaTocando) {
         playerYT.playVideo();
-        btn.innerText = "⏸";
-        btn.classList.add("playing");
-        if(icon) icon.classList.add("playing");
-        if(tip) tip.style.display = "none"; // Esconde o aviso permanentemente após dar play
+        if (btn) { btn.innerText = "⏸"; btn.classList.add("playing"); }
+        if (icon) icon.classList.add("playing");
+        if (tip) tip.style.display = "none"; 
         musicaTocando = true;
     } else {
         playerYT.pauseVideo();
-        btn.innerText = "▶";
-        btn.classList.remove("playing");
-        if(icon) icon.classList.remove("playing");
+        if (btn) { btn.innerText = "▶"; btn.classList.remove("playing"); }
+        if (icon) icon.classList.remove("playing");
         musicaTocando = false;
     }
 }
@@ -364,69 +379,71 @@ function toggleMúsica() {
    SISTEMA DE PARTÍCULAS EM SEGUNDO PLANO (CANVAS)
    ========================================================================== */
 const canvas = document.getElementById("heartCanvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas ? canvas.getContext("2d") : null;
 
 let particulas = [];
 const maxParticulas = 40;
 
-function redimensionarCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", redimensionarCanvas);
-redimensionarCanvas();
-
-class Coracao {
-    constructor() {
-        this.reset();
-        this.y = Math.random() * canvas.height; 
+if (canvas && ctx) {
+    function redimensionarCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
+    window.addEventListener("resize", redimensionarCanvas);
+    redimensionarCanvas();
 
-    reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = canvas.height + 20;
-        this.tamanho = Math.random() * 12 + 6;
-        this.velocidadeY = -(Math.random() * 0.8 + 0.4);
-        this.oscilacaoVelocidade = Math.random() * 0.02 + 0.01;
-        this.oscilacaoDistancia = Math.random() * 1.5;
-        this.angulo = Math.random() * Math.PI;
-        this.opacidade = Math.random() * 0.4 + 0.15;
-    }
-
-    atualizar() {
-        this.y += this.velocidadeY;
-        this.angulo += this.oscilacaoVelocidade;
-        this.x += Math.sin(this.angulo) * this.oscilacaoDistancia;
-
-        if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
+    class Coracao {
+        constructor() {
             this.reset();
+            this.y = Math.random() * canvas.height; 
+        }
+
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height + 20;
+            this.tamanho = Math.random() * 12 + 6;
+            this.velocidadeY = -(Math.random() * 0.8 + 0.4);
+            this.oscilacaoVelocidade = Math.random() * 0.02 + 0.01;
+            this.oscilacaoDistancia = Math.random() * 1.5;
+            this.angulo = Math.random() * Math.PI;
+            this.opacidade = Math.random() * 0.4 + 0.15;
+        }
+
+        atualizar() {
+            this.y += this.velocidadeY;
+            this.angulo += this.oscilacaoVelocidade;
+            this.x += Math.sin(this.angulo) * this.oscilacaoDistancia;
+
+            if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
+                this.reset();
+            }
+        }
+
+        desenhar() {
+            ctx.save();
+            ctx.globalAlpha = this.opacidade;
+            ctx.translate(this.x, this.y);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-this.tamanho / 2, -this.tamanho / 2, -this.tamanho, this.tamanho / 3, 0, this.tamanho);
+            ctx.bezierCurveTo(this.tamanho, this.tamanho / 3, this.tamanho / 2, -this.tamanho / 2, 0, 0);
+            ctx.fillStyle = "#ff2a4b";
+            ctx.fill();
+            ctx.restore();
         }
     }
 
-    desenhar() {
-        ctx.save();
-        ctx.globalAlpha = this.opacidade;
-        ctx.translate(this.x, this.y);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-this.tamanho / 2, -this.tamanho / 2, -this.tamanho, this.tamanho / 3, 0, this.tamanho);
-        ctx.bezierCurveTo(this.tamanho, this.tamanho / 3, this.tamanho / 2, -this.tamanho / 2, 0, 0);
-        ctx.fillStyle = "#ff2a4b";
-        ctx.fill();
-        ctx.restore();
+    for (let i = 0; i < maxParticulas; i++) {
+        particulas.push(new Coracao());
     }
-}
 
-for (let i = 0; i < maxParticulas; i++) {
-    particulas.push(new Coracao());
-}
-
-function loopAnimacaoCorta() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particulas.length; i++) {
-        particulas[i].atualizar();
-        particulas[i].desenhar();
+    function loopAnimacaoCorta() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particulas.length; i++) {
+            particulas[i].atualizar();
+            particulas[i].desenhar();
+        }
+        requestAnimationFrame(loopAnimacaoCorta);
     }
-    requestAnimationFrame(loopAnimacaoCorta);
+    loopAnimacaoCorta();
 }
-loopAnimacaoCorta();
