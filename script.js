@@ -1,4 +1,4 @@
-﻿/* ==========================================================================\
+/* ==========================================================================\
    ÁREA DE EDIÇÃO FÁCIL - ALTERE OS DADOS DO SEU CASAL AQUI
    ========================================================================== */
 const CONFIG = {
@@ -44,7 +44,7 @@ const FRASES_CORACAO = [
     "Seu carinho reconstruiu tudo de mais lindo que existe em mim.",
     "Não importa onde eu esteja, meu coração sempre vai pertencer a você.",
     "Estar com você é como ouvir a minha música favorita repetidamente sem nunca enjoar.",
-    "Você é o sonho mais lindo que Deus me permitiu realizar acordado.",
+    "Você é o dream mais lindo que Deus me permitiu realizar acordado.",
     "O seu abraço tem o encaixe perfeito para acalmar todo o meu mundo.",
     "Prometo te amar nos pequenos detalhes e cuidar de você para sempre.",
     "Minha vida ganhou uma trilha sonora muito mais bonita desde que você chegou."
@@ -176,25 +176,21 @@ function atualizarContador() {
 }
 
 /* ==========================================================================\
-   NOVA FUNÇÃO: LOGICA INTERATIVA DO CORAÇÃO SURPRESA DO BALÃO
+   LOGICA INTERATIVA DO CORAÇÃO SURPRESA DO BALÃO
    ========================================================================== */
 function popHeart(event) {
     const heart = document.getElementById("clickable-heart");
     const phraseBox = document.getElementById("heart-phrase-box");
     const phraseText = document.getElementById("heart-phrase-text");
 
-    // Coleta o milissegundo atual do clique para garantir a aleatoriedade completa baseada no horário exato
     const currentMs = new Date().getMilliseconds();
     const randomIndex = currentMs % FRASES_CORACAO.length;
     
-    // Define o texto sorteado
     phraseText.innerText = FRASES_CORACAO[randomIndex];
 
-    // Cria efeito visual de estouro injetando mini corações no canvas de fundo
     if (typeof Coracao === 'function') {
         for (let i = 0; i < 35; i++) {
             let p = new Coracao();
-            // Faz brotar do local aproximado do clique na tela
             p.x = event.clientX || window.innerWidth / 2;
             p.y = event.clientY || window.innerHeight / 2;
             p.velocidadeY = (Math.random() * 4 - 2) * 2;
@@ -205,7 +201,6 @@ function popHeart(event) {
         }
     }
 
-    // Esconde o coração e mostra o card com a frase de amor
     heart.style.transform = "scale(0)";
     setTimeout(() => {
         heart.classList.add("hidden");
@@ -231,10 +226,20 @@ function openEnvelope() {
     const wrapper = document.querySelector('.envelope-wrapper');
     wrapper.classList.add('open');
 
+    // Quando o usuário abre o envelope, iniciamos a música automaticamente via código se permitido pelo navegador
     if (playerYT && typeof playerYT.playVideo === 'function') {
         playerYT.playVideo();
         musicaTocando = true;
-        document.getElementById("play-pause-btn").innerText = "⏸";
+        
+        // Atualiza elementos visuais do player de som
+        const btn = document.getElementById("play-pause-btn");
+        const icon = document.querySelector(".music-icon");
+        const tip = document.getElementById("music-tip");
+        
+        btn.innerText = "⏸";
+        btn.classList.add("playing");
+        if(icon) icon.classList.add("playing");
+        if(tip) tip.style.display = "none"; // Esconde o aviso caso já esteja tocando
     }
 
     setTimeout(() => {
@@ -304,7 +309,7 @@ function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('youtube-audio-player', {
         videoId: CONFIG.youtubeId,
         playerVars: {
-            'autoplay': 0,
+            'autoplay': 0,      // Aguarda estritamente o play/clique do usuário
             'controls': 0,
             'loop': 1,
             'playlist': CONFIG.youtubeId,
@@ -323,15 +328,23 @@ function onPlayerReady(event) {
 
 function toggleMúsica() {
     if (!playerYT || typeof playerYT.playVideo !== 'function') return;
+    
     const btn = document.getElementById("play-pause-btn");
+    const icon = document.querySelector(".music-icon");
+    const tip = document.getElementById("music-tip");
 
     if (!musicaTocando) {
         playerYT.playVideo();
         btn.innerText = "⏸";
+        btn.classList.add("playing");
+        if(icon) icon.classList.add("playing");
+        if(tip) tip.style.display = "none"; // Esconde o aviso permanentemente após dar play
         musicaTocando = true;
     } else {
         playerYT.pauseVideo();
         btn.innerText = "▶";
+        btn.classList.remove("playing");
+        if(icon) icon.classList.remove("playing");
         musicaTocando = false;
     }
 }
