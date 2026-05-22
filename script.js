@@ -53,7 +53,7 @@ const FRASES_CORACAO = [
     "Você é o meu porto seguro, a minha paz eterna e a minha melhor escolha diária.",
     "Te amo hoje, amanhã, depois e por toda a eternidade que nos espera.",
     "Seu carinho reconstruiu tudo de mais lindo que existe em mim.",
-    "Não importa onde eu esteja, meu coração sempre vai pertencera você.",
+    "Não importa onde eu esteja, meu coração sempre vai pertencer a você.",
     "Estar com você é como ouvir a minha música favorita repetidamente sem nunca enjoar.",
     "Você é o sonho mais lindo que Deus me permitiu realizar acordado.",
     "O seu abraço tem o encaixe perfeito para acalmar todo o meu mundo.",
@@ -84,11 +84,9 @@ function montarEstruturasDeFotos() {
     let isFirst = true;
     let indexDot = 0;
 
-    // 1. Gera o Grupo de Fotos do Slider Superior (Grupo 1: foto1.jpg até foto6.jpg)
     for (let i = CONFIG.sliderFotoInicio; i <= CONFIG.sliderFotoFim; i++) {
         const slideDiv = document.createElement("div");
         slideDiv.className = `slide-item ${isFirst ? 'active' : ''}`;
-        
         const imgPath = `imag/${CONFIG.prefixoFotos}${i}${CONFIG.extensaoFotos}`;
         
         slideDiv.style.backgroundImage = `url('${imgPath}')`;
@@ -113,7 +111,6 @@ function montarEstruturasDeFotos() {
         indexDot++;
     }
 
-    // 2. Gera o Grupo de Fotos da Galeria Horizontal Inferior (Grupo 2: foto7.jpg até foto12.jpg)
     for (let i = CONFIG.carrosselFotoInicio; i <= CONFIG.carrosselFotoFim; i++) {
         const itemDiv = document.createElement("div");
         itemDiv.className = "gallery-item";
@@ -249,24 +246,7 @@ function openEnvelope() {
     const wrapper = document.querySelector('.envelope-wrapper');
     if (wrapper) wrapper.classList.add('open');
 
-    // Tenta dar play na música, mas não deixa travar se o navegador bloquear
-    try {
-        if (playerYT && typeof playerYT.playVideo === 'function') {
-            playerYT.playVideo();
-            musicaTocando = true;
-            
-            const btn = document.getElementById("play-pause-btn");
-            const icon = document.querySelector(".music-icon");
-            const tip = document.getElementById("music-tip");
-            
-            if (btn) { btn.innerText = "⏸"; btn.classList.add("playing"); }
-            if (icon) icon.classList.add("playing");
-            if (tip) tip.style.display = "none";
-        }
-    } catch (e) {
-        console.log("Autoplay bloqueado pelo navegador, aguardando clique manual.");
-    }
-
+    // A música NÃO tenta iniciar aqui para evitar que o navegador bloqueie a abertura do envelope.
     setTimeout(() => {
         const welcomeScreen = document.getElementById("welcome-screen");
         const mainContent = document.getElementById("main-content");
