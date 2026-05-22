@@ -1,4 +1,4 @@
-﻿/* ==========================================================================\
+/* ==========================================================================\
    CONFIGURAÇÕES GERAIS E PALETA DE CORES (PREMIUM BLACK, DARK RED & PINK)
    ========================================================================== */
 :root {
@@ -231,6 +231,12 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+.music-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 .music-info {
     display: flex;
     align-items: center;
@@ -240,6 +246,10 @@ body {
 }
 
 .music-icon {
+    display: inline-block;
+}
+
+.music-icon.playing {
     animation: rotateMusic 4s linear infinite;
 }
 
@@ -252,20 +262,37 @@ body {
     color: var(--pink-soft);
 }
 
+/* Pequeno texto indicativo adicionado */
+.music-tip {
+    font-size: 0.65rem;
+    color: #ffffff;
+    opacity: 0.8;
+    margin-top: 2px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    animation: flashTip 2s infinite alternate;
+    white-space: nowrap;
+}
+
 .play-pause-btn {
     background: var(--primary-red);
     border: none;
     color: white;
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    padding-left: 2px; /* Ajuste visual para centralizar o ícone de Play */
     transition: background 0.3s, transform 0.2s;
     box-shadow: 0 0 10px rgba(255, 42, 75, 0.4);
+}
+
+.play-pause-btn.playing {
+    padding-left: 0; /* Volta ao normal no pause */
 }
 
 .play-pause-btn:hover {
@@ -475,7 +502,7 @@ body {
 }
 
 /* ==========================================================================\
-   ESTILO ADICIONAL: CARDS DA NOSSA HISTÓRIA
+   CARDS DA NOSSA HISTÓRIA
    ========================================================================== */
 .history-section {
     text-align: center;
@@ -556,7 +583,7 @@ body {
 }
 
 /* ==========================================================================\
-   ESTILO ADICIONAL: SEÇÃO INTERATIVA DO CORAÇÃO SURPRESA
+   SEÇÃO INTERATIVA DO CORAÇÃO SURPRESA
    ========================================================================== */
 .interactive-heart-section {
     text-align: center;
@@ -767,6 +794,11 @@ body {
     to { transform: rotate(360deg); }
 }
 
+@keyframes flashTip {
+    from { opacity: 0.3; }
+    to { opacity: 1; color: var(--pink-soft); }
+}
+
 @keyframes heartbeat {
     0% { transform: scale(1); }
     30% { transform: scale(1.2); }
@@ -844,8 +876,10 @@ footer {
         top: auto;
         bottom: 25px;
         right: 25px;
+        gap: 8px;
     }
-    .music-info { max-width: 110px; }
+    .music-info { max-width: 100px; }
+    .music-tip { font-size: 0.58rem; }
     
     .btn-back-to-top {
         bottom: 25px;
