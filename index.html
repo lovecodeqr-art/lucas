@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -31,11 +31,14 @@
     <main id="main-content" class="main-content hidden">
         
         <div class="audio-control-card">
-            <div class="music-info">
-                <span class="music-icon">🎵</span>
-                <span id="music-title" class="music-title">Carregando trilha sonora...</span>
+            <div class="music-info-container">
+                <div class="music-info">
+                    <span class="music-icon">🎵</span>
+                    <span id="music-title" class="music-title">Carregando trilha sonora...</span>
+                </div>
+                <span id="music-tip" class="music-tip">Clique para iniciar a música ➔</span>
             </div>
-            <button id="play-pause-btn" class="play-pause-btn" onclick="toggleMúsica()">⏸</button>
+            <button id="play-pause-btn" class="play-pause-btn" onclick="toggleMúsica()">▶</button>
         </div>
 
         <header class="hero-section scroll-reveal">
