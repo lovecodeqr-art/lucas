@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para o Meu Amor ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <canvas id="heartCanvas"></canvas>
+
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                <div class="letter">
+                    <div class="letter-text">
+                        <h2 id="card-title">Para Alguém Especial</h2>
+                        <p id="card-short-text">Você mudou o meu mundo por completo...</p>
+                    </div>
+                </div>
+                <div class="heart-seal">❤️</div>
+            </div>
+            <p class="click-hint">Clique na carta para abrir ❤️</p>
+        </div>
+    </div>
+
+    <main id="main-content" class="main-content hidden">
+        
+        <div class="audio-control-card">
+            <div class="music-info">
+                <span class="music-icon">🎵</span>
+                <span id="music-title" class="music-title">Carregando trilha sonora...</span>
+            </div>
+            <button id="play-pause-btn" class="play-pause-btn" onclick="toggleMúsica()">⏸</button>
+        </div>
+
+        <header class="hero-section scroll-reveal">
+            <h1 id="couple-names" class="couple-title">Nomes do Casal</h1>
+            <p class="subtitle">A nossa história de amor em cada detalhe</p>
+            <div class="heart-divider">💖</div>
+        </header>
+
+        <section class="slider-section scroll-reveal">
+            <div class="slider-container" id="main-slider">
+                <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+            <div class="slider-dots" id="slider-dots">
+                </div>
+        </section>
+
+        <section class="counter-section scroll-reveal">
+            <h2>Tempo que transformou minha vida</h2>
+            <div class="counter-container">
+                <div class="counter-box"><span id="years">00</span><label>Anos</label></div>
+                <div class="counter-box"><span id="days">00</span><label>Dias</label></div>
+                <div class="counter-box"><span id="hours">00</span><label>Horas</label></div>
+                <div class="counter-box"><span id="minutes">00</span><label>Minutos</label></div>
+                <div class="counter-box"><span id="seconds">00</span><label>Segundos</label></div>
+                <div class="counter-box"><span id="milliseconds">000</span><label>Milésimos</label></div>
+            </div>
+        </section>
+
+        <section class="history-section scroll-reveal">
+            <h2>Nossa Linda História</h2>
+            <p class="section-subtitle">Os capítulos mais importantes que escrevemos juntos</p>
+            <div class="history-timeline">
+                <div class="history-card">
+                    <span class="history-icon">✨</span>
+                    <h3>O Começo de Tudo</h3>
+                    <p>O dia em que os nossos olhares se cruzaram e tudo começou a fazer sentido. Um instante simples que mudou o rumo dos nossos corações para sempre.</p>
+                </div>
+                <div class="history-card">
+                    <span class="history-icon">🌹</span>
+                    <h3>O Pedido Especial</h3>
+                    <p>Quando decidimos oficializar o que as nossas almas já sabiam. Dizer "sim" para você foi a decisão mais linda e certeira da minha vida.</p>
+                </div>
+                <div class="history-card">
+                    <span class="history-icon">✈️</span>
+                    <h3>Momentos Inesquecíveis</h3>
+                    <p>Cada risada compartilhada, cada viagem, cada detalhe rotineiro que se torna extraordinário apenas porque tenho você ao meu lado.</p>
+                </div>
+                <div class="history-card">
+                    <span class="history-icon">♾️</span>
+                    <h3>O Nosso Futuro</h3>
+                    <p>Olho para frente e vejo uma vida inteira cheia de sonhos para realizar com você. Este é apenas o início do nosso eterno felizes para sempre.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-heart-section scroll-reveal">
+            <h2>Coração Surpresa</h2>
+            <p class="section-subtitle">Clique no coração flutuante abaixo para estourar uma surpresa romântica!</p>
+            <div class="heart-interactive-container">
+                <div id="clickable-heart" class="floating-heart" onclick="popHeart(event)">❤️</div>
+                <div id="heart-phrase-box" class="phrase-box hidden">
+                    <p id="heart-phrase-text"></p>
+                    <button class="reset-heart-btn" onclick="resetHeart()">Quero outra frase ✨</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery-section scroll-reveal">
+            <h2>Nossos Momentos Favoritos</h2>
+            <div class="gallery-scroll" id="horizontal-gallery">
+                </div>
+            <p class="scroll-tip">➔ Arraste ou deslize para o lado para ver mais</p>
+        </section>
+
+        <section class="love-letter-section scroll-reveal">
+            <div class="glass-card">
+                <div class="sparkle"></div>
+                <h3>Minha Promessa para Você</h3>
+                <p id="main-love-text">
+                    </p>
+                <span class="signature">Com todo o meu amor, para sempre. ❤️</span>
+            </div>
+        </section>
+
+        <footer>
+            <p>Feito com ❤️ para o amor da minha vida</p>
+        </footer>
+
+    </main>
+
+    <div id="youtube-audio-player" style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="script.js"></script>
+</body>
+</html>

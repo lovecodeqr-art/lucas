@@ -1,0 +1,857 @@
+﻿/* ==========================================================================\
+   CONFIGURAÇÕES GERAIS E PALETA DE CORES (PREMIUM BLACK, DARK RED & PINK)
+   ========================================================================== */
+:root {
+    --bg-dark: #0a0505;
+    --bg-card: rgba(20, 10, 10, 0.7);
+    --primary-red: #990011;
+    --neon-glow: #ff2a4b;
+    --pink-soft: #ffb3c1;
+    --text-light: #f7edf0;
+    --glass-border: rgba(255, 42, 75, 0.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    overflow-x: hidden;
+    min-height: 100vh;
+    scroll-behavior: smooth;
+}
+
+/* Canvas de Corações em Segundo Plano */
+#heartCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ==========================================================================\
+   TELA DE ENTRADA (WELCOME SCREEN) E ANIMAÇÃO DA CARTA/ENVELOPE
+   ========================================================================== */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-dark);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+.welcome-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.envelope-wrapper {
+    position: relative;
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.4s ease;
+}
+
+.envelope-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.envelope {
+    position: relative;
+    width: 280px;
+    height: 180px;
+    background-color: var(--primary-red);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(153, 0, 17, 0.3);
+    border-radius: 0 0 8px 8px;
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-top: 100px solid var(--primary-red);
+    transform-origin: top;
+    transition: transform 0.4s ease 0.2s;
+    z-index: 4;
+    filter: brightness(1.1);
+}
+
+.pocket {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-bottom: 90px solid #73000d;
+    z-index: 3;
+    border-radius: 0 0 8px 8px;
+}
+
+.pocket::before {
+    content: '';
+    position: absolute;
+    bottom: -90px;
+    left: -140px;
+    width: 0;
+    height: 0;
+    border-left: 140px solid #8c0010;
+    border-right: 140px solid transparent;
+    border-bottom: 90px solid transparent;
+}
+
+.pocket::after {
+    content: '';
+    position: absolute;
+    bottom: -90px;
+    right: -140px;
+    width: 0;
+    height: 0;
+    border-left: transparent;
+    border-right: 140px solid #8c0010;
+    border-bottom: 90px solid transparent;
+}
+
+.letter {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    width: 250px;
+    height: 150px;
+    background-color: #fcf8f2;
+    padding: 15px;
+    border-radius: 4px;
+    z-index: 2;
+    transition: transform 0.5s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.letter-text {
+    color: #2b2b2b;
+    text-align: center;
+}
+
+.letter-text h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.8rem;
+    color: var(--primary-red);
+    margin-bottom: 8px;
+}
+
+.letter-text p {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.heart-seal {
+    position: absolute;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    z-index: 5;
+    transition: transform 0.4s ease 0.4s, opacity 0.3s ease 0.3s;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+}
+
+.click-hint {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    animation: pulseGlow 1.5s infinite alternate;
+    color: var(--pink-soft);
+}
+
+/* Estado de Abertura */
+.envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.envelope-wrapper.open .letter {
+    transform: translateY(-90px);
+    z-index: 3;
+}
+
+.envelope-wrapper.open .heart-seal {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+}
+
+/* ==========================================================================\
+   CONTEÚDO PRINCIPAL (MAIN PLATFORMLAYOUT)
+   ========================================================================== */
+.main-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.main-content.hidden {
+    display: none !important;
+}
+
+/* Player Compacto de Áudio Superior */
+.audio-control-card {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    padding: 10px 18px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.music-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    max-width: 180px;
+}
+
+.music-icon {
+    animation: rotateMusic 4s linear infinite;
+}
+
+.music-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--pink-soft);
+}
+
+.play-pause-btn {
+    background: var(--primary-red);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 0 10px rgba(255, 42, 75, 0.4);
+}
+
+.play-pause-btn:hover {
+    background: var(--neon-glow);
+    transform: scale(1.05);
+}
+
+/* Cabeçalho da Página */
+.hero-section {
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+.couple-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4.5rem;
+    background: linear-gradient(to right, #ffffff, var(--pink-soft), var(--neon-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+}
+
+.subtitle {
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-weight: 300;
+}
+
+.heart-divider {
+    font-size: 1.5rem;
+    margin-top: 15px;
+    animation: heartbeat 1.4s infinite ease-in-out;
+    display: inline-block;
+}
+
+/* ==========================================================================\
+   SLIDER PRINCIPAL AUTOMÁTICO (SUPERIOR)
+   ========================================================================== */
+.slider-section {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto 50px auto;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 42, 75, 0.15);
+    border: 1px solid var(--glass-border);
+}
+
+.slide-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.slide-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(25px) brightness(0.4);
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.slide-item img {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+}
+
+.slide-item.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Botões do Slider */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 10;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+.nav-btn:hover {
+    background: var(--primary-red);
+    border-color: var(--neon-glow);
+    box-shadow: 0 0 15px var(--neon-glow);
+}
+
+.prev-btn { left: 20px; }
+.next-btn { right: 20px; }
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.dot.active {
+    background: var(--neon-glow);
+    width: 24px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* ==========================================================================\
+   CRONÔMETRO PREMIUM (CONTADOR DE TEMPO JUNTOS)
+   ========================================================================== */
+.counter-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.counter-section h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    font-weight: 400;
+    color: var(--pink-soft);
+}
+
+.counter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.counter-box {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    padding: 18px 10px;
+    border-radius: 16px;
+    min-width: 110px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+}
+
+.counter-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-glow);
+    box-shadow: 0 15px 30px rgba(255, 42, 75, 0.1);
+}
+
+.counter-box span {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 42, 75, 0.3);
+}
+
+.counter-box label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.5;
+    margin-top: 5px;
+}
+
+/* ==========================================================================\
+   ESTILO ADICIONAL: CARDS DA NOSSA HISTÓRIA
+   ========================================================================== */
+.history-section {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 10px;
+}
+
+.history-section h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 400;
+    color: var(--pink-soft);
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-bottom: 35px;
+    font-weight: 300;
+}
+
+.history-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.history-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    transition: all 0.4s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.history-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--neon-glow);
+    box-shadow: 0 20px 40px rgba(255, 42, 75, 0.15);
+}
+
+.history-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--primary-red), var(--neon-glow));
+}
+
+.history-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 8px var(--neon-glow));
+}
+
+.history-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.history-card p {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    opacity: 0.75;
+    font-weight: 300;
+}
+
+/* ==========================================================================\
+   ESTILO ADICIONAL: SEÇÃO INTERATIVA DO CORAÇÃO SURPRESA
+   ========================================================================== */
+.interactive-heart-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.interactive-heart-section h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 400;
+    color: var(--pink-soft);
+}
+
+.heart-interactive-container {
+    min-height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 20px;
+}
+
+.floating-heart {
+    font-size: 5.5rem;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    animation: floatAnimation 3s infinite ease-in-out, heartGlow 2s infinite alternate;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.floating-heart:hover {
+    transform: scale(1.15);
+}
+
+.phrase-box {
+    background: rgba(25, 10, 12, 0.85);
+    border: 2px solid var(--neon-glow);
+    backdrop-filter: blur(15px);
+    padding: 35px 25px;
+    border-radius: 20px;
+    max-width: 550px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(255, 42, 75, 0.3);
+    animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#heart-phrase-text {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    line-height: 1.3;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 179, 193, 0.4);
+}
+
+.reset-heart-btn {
+    background: linear-gradient(135deg, var(--primary-red), var(--neon-glow));
+    border: none;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 42, 75, 0.4);
+    transition: all 0.3s ease;
+}
+
+.reset-heart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 42, 75, 0.6);
+}
+
+/* ==========================================================================\
+   GALERIA HORIZONTAL COM EFEITO DE ARRASTAR
+   ========================================================================== */
+.gallery-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.gallery-section h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    font-weight: 400;
+    color: var(--pink-soft);
+}
+
+.gallery-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px 10px 30px 10px;
+    scroll-behavior: smooth;
+    cursor: grab;
+}
+
+.gallery-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.gallery-scroll::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-glow);
+}
+
+.gallery-scroll.active {
+    cursor: grabbing;
+}
+
+.gallery-item {
+    flex: 0 0 280px;
+    height: 380px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.4s, border-color 0.4s;
+}
+
+.gallery-item:hover {
+    transform: scale(1.03) translateY(-5px);
+    border-color: var(--neon-glow);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.scroll-tip {
+    font-size: 0.75rem;
+    opacity: 0.4;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+/* ==========================================================================\
+   CARTA DE AMOR COM EFEITO GLASSMORPHISM
+   ========================================================================== */
+.love-letter-section {
+    width: 100%;
+    max-width: 750px;
+    margin: 0 auto 60px auto;
+}
+
+.glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    padding: 50px 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.6), 0 0 40px rgba(255, 42, 75, 0.08);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.glass-card h3 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--pink-soft);
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 42, 75, 0.2);
+}
+
+.glass-card p {
+    font-size: 1rem;
+    line-height: 1.8;
+    opacity: 0.85;
+    white-space: pre-line;
+    margin-bottom: 30px;
+    text-align: justify;
+    font-weight: 300;
+}
+
+.signature {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: var(--neon-glow);
+    display: block;
+    text-shadow: 0 0 8px rgba(255, 42, 75, 0.3);
+}
+
+/* ==========================================================================\
+   TODAS AS ANIMAÇÕES KEYFRAMES
+   ========================================================================== */
+@keyframes rotateMusic {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.2); }
+    60% { transform: scale(1); }
+    90% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+@keyframes floatAnimation {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes heartGlow {
+    from { filter: drop-shadow(0 0 5px rgba(255, 42, 75, 0.5)); }
+    to { filter: drop-shadow(0 0 20px rgba(255, 42, 75, 0.9)); }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulseGlow {
+    from { text-shadow: 0 0 5px rgba(255, 42, 75, 0.2); }
+    to { text-shadow: 0 0 15px rgba(255, 42, 75, 0.6); }
+}
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.scroll-reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+footer {
+    text-align: center;
+    padding: 30px 0;
+    font-size: 0.8rem;
+    opacity: 0.4;
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================\
+   RESPONSIVIDADE COMPLETA
+   ========================================================================== */
+@media (max-width: 768px) {
+    .couple-title { font-size: 2.8rem; }
+    .counter-container { gap: 10px; }
+    
+    .counter-box {
+        min-width: 82px;
+        padding: 12px 5px;
+    }
+    .counter-box span { font-size: 1.4rem; }
+    .counter-box label { font-size: 0.6rem; letter-spacing: 1px; }
+    
+    .slider-container { height: 320px; }
+    .nav-btn { width: 36px; height: 36px; font-size: 0.9rem; }
+    
+    .history-timeline { grid-template-columns: 1fr; }
+    #heart-phrase-text { font-size: 1.7rem; }
+    
+    .glass-card { padding: 30px 20px; }
+    .glass-card h3 { font-size: 2.2rem; }
+    .glass-card p { font-size: 0.85rem; line-height: 1.6; }
+    
+    .audio-control-card {
+        padding: 8px 12px;
+        top: auto;
+        bottom: 25px;
+        right: 25px;
+    }
+    .music-info { max-width: 110px; }
+    
+    .btn-back-to-top {
+        bottom: 25px;
+        left: 25px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
